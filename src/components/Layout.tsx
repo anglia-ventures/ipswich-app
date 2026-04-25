@@ -2,8 +2,13 @@ import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useAuth } from "../auth/AuthContext";
 
+/**
+ * Header/footer chrome shown once the user is signed in and has a paid
+ * subscription. Unauthenticated and unpaid states render their own
+ * full-screen layouts (SignIn / SubscribersOnly).
+ */
 export default function Layout({ children }: { children: ReactNode }) {
-  const { member, isPaid, signOut } = useAuth();
+  const { member, signOut } = useAuth();
 
   return (
     <div className="app-shell">
@@ -12,19 +17,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           Ipswich News
         </Link>
         <nav className="app-nav">
-          {member ? (
-            <>
-              <span className="member-badge">
-                {member.name || member.email}
-                {isPaid ? " · Subscriber" : ""}
-              </span>
-              <button type="button" className="link-button" onClick={() => void signOut()}>
-                Sign out
-              </button>
-            </>
-          ) : (
-            <Link to="/sign-in">Sign in</Link>
+          {member && (
+            <span className="member-badge">{member.name || member.email}</span>
           )}
+          <button type="button" className="link-button" onClick={() => void signOut()}>
+            Sign out
+          </button>
         </nav>
       </header>
       <main className="app-main">{children}</main>

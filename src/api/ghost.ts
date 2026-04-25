@@ -150,17 +150,3 @@ export function hasPaidAccess(member: Member | null): boolean {
   if (member.status === "paid" || member.status === "comped") return true;
   return member.tiers.some((t) => t.type === "paid");
 }
-
-export function canRead(post: Pick<Post, "visibility">, member: Member | null): boolean {
-  switch (post.visibility) {
-    case "public":
-      return true;
-    case "members":
-      return member !== null;
-    case "paid":
-    case "tiers":
-      return hasPaidAccess(member);
-    default:
-      return false;
-  }
-}

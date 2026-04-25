@@ -25,30 +25,29 @@ export default function SignIn() {
   }
 
   return (
-    <section className="sign-in">
-      <h1>Sign in</h1>
-      <p>
-        Enter the email address associated with your Ipswich News account.
-        We'll send you a link to sign in.
-      </p>
-      <form onSubmit={onSubmit} className="sign-in-form">
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={status === "sending"}
-        />
-        <button type="submit" disabled={status === "sending"}>
-          {status === "sending" ? "Sending…" : "Email me a sign-in link"}
-        </button>
-      </form>
-      {message && (
-        <p className={status === "error" ? "status error" : "status"}>{message}</p>
-      )}
-    </section>
+    <div className="unauth-shell">
+      <div className="unauth-card">
+        <h1 className="brand">Ipswich News</h1>
+        <p className="muted">For Ipswich News subscribers.</p>
+        <form onSubmit={onSubmit} className="sign-in-form">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={status === "sending"}
+          />
+          <button type="submit" disabled={status === "sending"}>
+            {status === "sending" ? "Sending…" : "Email me a sign-in link"}
+          </button>
+        </form>
+        {message && (
+          <p className={status === "error" ? "status error" : "status"}>{message}</p>
+        )}
+      </div>
+    </div>
   );
 }
