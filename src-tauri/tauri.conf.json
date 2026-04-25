@@ -39,5 +39,18 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["ipswich-app"]
+      },
+      "mobile": [
+        {
+          "host": "www.ipswich.co.uk",
+          "pathPrefix": ["/auth/callback"]
+        }
+      ]
+    }
   }
 }
