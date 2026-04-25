@@ -75,6 +75,20 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 const MEMBERS_BASE = `${API_BASE}/members/api`;
 
+// Ghost's /send-magic-link/ endpoint rejects requests without a short-lived
+// integrity token fetched from /integrity-token/. Without it Ghost returns a
+// generic 400 BadRequestError ("The request could not be understood.").
+async function fetchIntegrityToken(): Promise<string> {
+  const res = await fetch(`${MEMBERS_BASE}/integrity-token/`, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error(`Integrity token request failed: ${res.status}`);
+  }
+  return (await res.text()).trim();
+}
+
 /**
  * Trigger a sign-in magic link to be emailed to the user.
  *
@@ -83,10 +97,16 @@ const MEMBERS_BASE = `${API_BASE}/members/api`;
  * (see Tauri's deep-link plugin) and pass the token to {@link completeSignIn}.
  */
 export async function sendMagicLink(email: string): Promise<void> {
+  const integrityToken = await fetchIntegrityToken();
   const res = await fetch(`${MEMBERS_BASE}/send-magic-link/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, emailType: "signin" }),
+    credentials: "include",
+    body: JSON.stringify({
+      email,
+      emailType: "signin",
+      integrityToken,
+    }),
   });
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
