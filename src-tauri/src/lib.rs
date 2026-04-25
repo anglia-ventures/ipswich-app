@@ -5,7 +5,19 @@
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
-        .setup(|_app| Ok(()))
+        .plugin(tauri_plugin_deep_link::init())
+        .setup(|app| {
+            // Linux + Windows-debug builds aren't installed via a bundle, so the
+            // OS hasn't auto-registered the URL scheme. Register at runtime so
+            // `ipswich-app://...` works during dev.
+            #[cfg(any(target_os = "linux", all(debug_assertions, target_os = "windows")))]
+            {
+                use tauri_plugin_deep_link::DeepLinkExt;
+                app.deep_link().register_all()?;
+            }
+            let _ = app;
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running Ipswich News");
 }

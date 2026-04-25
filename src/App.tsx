@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./auth/AuthContext";
+import { useDeepLinkAuth } from "./auth/useDeepLinkAuth";
 import Layout from "./components/Layout";
 import AuthCallback from "./pages/AuthCallback";
 import Home from "./pages/Home";
@@ -8,6 +9,7 @@ import SignIn from "./pages/SignIn";
 import SubscribersOnly from "./pages/SubscribersOnly";
 
 export default function App() {
+  useDeepLinkAuth();
   return (
     <Routes>
       <Route path="/auth/callback" element={<AuthCallback />} />
