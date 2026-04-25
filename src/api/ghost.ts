@@ -1,4 +1,4 @@
-import { GHOST_CONTENT_KEY, GHOST_URL, PAGE_SIZE } from "../config";
+import { API_BASE, GHOST_CONTENT_KEY, PAGE_SIZE } from "../config";
 import type { Member, Post, PostsResponse } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -6,7 +6,7 @@ import type { Member, Post, PostsResponse } from "./types";
 // Docs: https://ghost.org/docs/content-api/
 // ---------------------------------------------------------------------------
 
-const CONTENT_BASE = `${GHOST_URL}/ghost/api/content`;
+const CONTENT_BASE = `${API_BASE}/ghost/api/content`;
 
 const POST_FIELDS = [
   "id",
@@ -73,7 +73,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 // Endpoints live under /members/api on the Ghost site.
 // ---------------------------------------------------------------------------
 
-const MEMBERS_BASE = `${GHOST_URL}/members/api`;
+const MEMBERS_BASE = `${API_BASE}/members/api`;
 
 /**
  * Trigger a sign-in magic link to be emailed to the user.
