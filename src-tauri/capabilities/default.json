@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default capabilities granted to the Ipswich News webview.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    {
+      "identifier": "shell:allow-open",
+      "allow": [
+        { "url": "https://www.ipswich.co.uk/**" },
+        { "url": "https://ipswich.co.uk/**" },
+        { "url": "https://*.ipswich.co.uk/**" }
+      ]
+    }
+  ]
+}

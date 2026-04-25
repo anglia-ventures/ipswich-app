@@ -1,0 +1,2 @@
+# Generate icons by running `npm run icons -- path/to/source.png` once you
+# have a source logo (≥1024×1024 PNG). Tauri will write the full set here.

@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Tauri / Rust
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# Tauri mobile generated projects (regenerate via `tauri android init` / `tauri ios init`)
+src-tauri/gen/android/
+src-tauri/gen/apple/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
