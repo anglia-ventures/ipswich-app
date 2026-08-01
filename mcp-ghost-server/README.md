@@ -72,25 +72,13 @@ Or add directly to `.mcp.json` / `~/.claude.json`:
 Add the same block to your `claude_desktop_config.json` (Settings → Developer → Edit Config),
 then restart Claude Desktop.
 
-### Claude.ai (web) custom connector
+### Claude.ai (web) custom connectors
 
-Claude.ai connectors are **remote** servers reached over HTTP, not local processes. Run this
-server in HTTP mode somewhere reachable from the internet (a small VPS, Fly.io, Render, etc.):
-
-```bash
-MCP_TRANSPORT=http \
-GHOST_URL=https://www.ipswich.co.uk \
-GHOST_ADMIN_API_KEY=<id:secret> \
-MCP_AUTH_TOKEN=$(openssl rand -hex 32) \
-PORT=8787 \
-node dist/index.js
-```
-
-Put it behind HTTPS (a reverse proxy like Caddy/Nginx, or your host's built-in TLS), then in
-Claude.ai: **Settings → Connectors → Add custom connector**, using
-`https://your-host/mcp` as the URL and the `MCP_AUTH_TOKEN` value as a bearer token
-(Claude.ai's custom connector setup lets you supply an auth header). Keep `MCP_AUTH_TOKEN`
-secret — anyone with it can write to the Ghost site through this server.
+Not supported by this server. Claude.ai's custom connector dialog only accepts a remote HTTP
+URL authenticated via OAuth (ideally with Dynamic Client Registration, so no Client ID/Secret
+needs to be entered) — there's no field for a simple shared token. This server only implements
+local stdio, for Claude Code and Claude Desktop. Adding a full OAuth authorization server here
+is possible but is a separate, more involved piece of work.
 
 ## Notes
 
