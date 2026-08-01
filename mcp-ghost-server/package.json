@@ -1,0 +1,27 @@
+{
+  "name": "ghost-mcp-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "MCP server exposing the Ghost Admin API (posts, tags, authors) as tools for Claude — draft and manage Ipswich News articles from Claude.",
+  "engines": {
+    "node": ">=18.17"
+  },
+  "bin": {
+    "ghost-mcp-server": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
