@@ -74,11 +74,38 @@ then restart Claude Desktop.
 
 ### Claude.ai (web) custom connectors
 
-Not supported by this server. Claude.ai's custom connector dialog only accepts a remote HTTP
-URL authenticated via OAuth (ideally with Dynamic Client Registration, so no Client ID/Secret
-needs to be entered) — there's no field for a simple shared token. This server only implements
-local stdio, for Claude Code and Claude Desktop. Adding a full OAuth authorization server here
-is possible but is a separate, more involved piece of work.
+This mode runs the server as a remote HTTPS endpoint with its own OAuth 2.0 authorization
+server built in (Dynamic Client Registration + PKCE — see `src/oauth.ts`), so claude.ai's
+"Add custom connector" dialog can add it with just a URL, no Client ID/Secret needed.
+
+Ghost has no per-user login that maps onto this, so "signing in" is really just a shared
+passphrase gate: whoever knows it can connect and use every tool this server exposes
+(including `delete_post`), all against the one Ghost Admin key configured on the server. This
+is meant for a small trusted team, not public-scale auth — use a long random passphrase and
+don't reuse it elsewhere.
+
+**Deploy it** somewhere reachable over HTTPS (a small VPS, Fly.io, Render, etc.) with a reverse
+proxy terminating TLS in front of it, then run:
+
+```bash
+MCP_TRANSPORT=http \
+GHOST_URL=https://www.ipswich.co.uk \
+GHOST_ADMIN_API_KEY=<id:secret> \
+PUBLIC_URL=https://ghost-mcp.yourdomain.com \
+GHOST_MCP_PASSPHRASE=$(openssl rand -hex 20) \
+node dist/index.js
+```
+
+`PUBLIC_URL` must be the exact HTTPS origin clients use to reach it — it's baked into the OAuth
+metadata the server serves, so a mismatch breaks discovery. Keep the process running (e.g. via
+systemd, pm2, or a Docker restart policy) — `oauth-store.json` persists registered clients and
+refresh tokens next to it across restarts, but keep that file itself private, and back up (or
+regenerate) the passphrase somewhere your team can find it.
+
+**Add the connector**: in claude.ai, **Settings → Connectors → Add custom connector**, set the
+URL to `https://ghost-mcp.yourdomain.com/mcp`, leave Client ID/Secret blank, and add it. Claude
+will discover the OAuth endpoints automatically and prompt for the passphrase in a browser tab
+— anyone on the team who knows the passphrase can connect this way, from any project.
 
 ## Notes
 
