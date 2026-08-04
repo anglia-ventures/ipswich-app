@@ -22,13 +22,35 @@ needs its own, more privileged key and should not be shipped inside the client a
 | `create_tag` | Create a tag (usually unnecessary — `create_post`/`update_post` auto-create tags by name). |
 | `list_authors` | List staff users, to find a valid author email. |
 
-## 1. Create a Ghost Admin API key
+## Quickstart (recommended for teammates)
 
-In Ghost Admin: **Settings → Integrations → Add custom integration** (e.g. name it "Claude").
+Each person runs this on their own machine — it sets up your own local connector and your own
+Ghost Admin key, not a shared server. Takes a couple of minutes:
+
+```bash
+git clone https://github.com/anglia-ventures/ipswich-app.git
+cd ipswich-app/mcp-ghost-server
+./setup.sh
+```
+
+It installs Claude Code if you don't already have it, builds the server, walks you through
+creating your own Ghost Admin API key, registers the `ghost-cms` connector (available in any
+project on your machine), and installs the `draft-article` skill to `~/.claude/skills/`. When
+it's done, start a Claude Code session anywhere and try: *"list draft posts on Ghost"*.
+
+If that doesn't work for some reason (e.g. you're on Claude Desktop, not Claude Code), the
+manual steps below do the same thing by hand.
+
+## Manual setup
+
+### 1. Create a Ghost Admin API key
+
+In Ghost Admin: **Settings → Integrations → Add custom integration** (name it after yourself —
+each person should have their own key, so access can be revoked individually).
 Copy the **Admin API Key** shown (format `{id}:{secret}`) — this grants full write access to
 the site, so treat it like a password.
 
-## 2. Configure
+### 2. Configure
 
 ```bash
 cd mcp-ghost-server
@@ -38,9 +60,9 @@ cp .env.example .env
 npm run build
 ```
 
-## 3. Add it as a connector
+### 3. Add it as a connector
 
-### Claude Code (this repo, or any project)
+#### Claude Code (this repo, or any project)
 
 ```bash
 claude mcp add ghost-cms \
@@ -67,12 +89,17 @@ Or add directly to `.mcp.json` / `~/.claude.json`:
 }
 ```
 
-### Claude Desktop
+#### Claude Desktop
 
 Add the same block to your `claude_desktop_config.json` (Settings → Developer → Edit Config),
 then restart Claude Desktop.
 
-### Claude.ai (web) custom connectors
+#### Claude.ai (web) custom connectors — not set up yet, needs hosting
+
+Nobody's currently hosting this anywhere, so it's not usable from claude.ai's browser
+"Connectors" screen right now — the team is using per-person local setups (above) instead. The
+code below works and was tested end-to-end; it's here for whenever someone wants to stand up a
+shared server (a VPS, Fly.io, etc.) instead.
 
 This mode runs the server as a remote HTTPS endpoint with its own OAuth 2.0 authorization
 server built in (Dynamic Client Registration + PKCE — see `src/oauth.ts`), so claude.ai's
